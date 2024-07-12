@@ -1,7 +1,7 @@
 {
   "name": "userscript-redirect-youtube-channel-to-videos",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "packageManager": "pnpm@9.1.3",
   "description": "Redirect a YouTube channel \"home\"/\"featured\" page straight to videos tab.",
   "author": "Piotr Stojanow <piotrstojanow@gmail.com>",
