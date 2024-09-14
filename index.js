@@ -15,16 +15,31 @@
 // ==/UserScript==
 
 (function() {
-  const excludedPaths = ['/community', '/live', '/playlists', '/podcasts', '/search', '/shorts', '/streams']
+  const excludedPaths = ['/community', '/live', '/playlists', '/search', '/podcasts', '/shorts', '/streams'];
+  let isRedirecting = false;
 
-  const currentPath = window.location.pathname
-  const channelMatch = currentPath.match(/^\/@([^/]+)/)
+  function redirectIfNeeded() {
+    if (isRedirecting) return; // Prevent multiple redirections
 
-  if (channelMatch) {
-    const channelName = channelMatch[1]
-    const shouldRedirect = !excludedPaths.some(path => currentPath.startsWith(`/@${channelName}${path}`))
-    if (shouldRedirect && (!currentPath.endsWith('/videos') || currentPath.endsWith('/featured'))) {
-      window.location.href = `https://www.youtube.com/@${channelName}/videos`
+    const currentPath = window.location.pathname;
+    const channelMatch = currentPath.match(/^\/@([^/]+)/);
+
+    if (channelMatch) {
+      const channelName = channelMatch[1];
+      const shouldRedirect = !excludedPaths.some(path => currentPath.startsWith(`/@${channelName}${path}`));
+
+      if (shouldRedirect && (!currentPath.endsWith('/videos') || currentPath.endsWith('/featured'))) {
+        isRedirecting = true;
+        const newUrl = `https://www.youtube.com/@${channelName}/videos`;
+        window.location.href = newUrl;
+      }
     }
   }
-})()
+
+  // Observe changes in the DOM to trigger redirection if needed
+  const observer = new MutationObserver(redirectIfNeeded);
+  observer.observe(document, { subtree: true, childList: true });
+
+  // Initial check for redirection
+  redirectIfNeeded();
+})();
