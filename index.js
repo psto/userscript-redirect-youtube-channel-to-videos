@@ -15,7 +15,7 @@
 // ==/UserScript==
 
 (function() {
-  const excludedPaths = ['/community', '/live', '/playlists', '/podcasts', '/shorts', '/streams']
+  const excludedPaths = ['/community', '/live', '/playlists', '/podcasts', '/search', '/shorts', '/streams']
 
   const currentPath = window.location.pathname
   const channelMatch = currentPath.match(/^\/@([^/]+)/)
