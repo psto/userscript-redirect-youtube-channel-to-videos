@@ -1,10 +1,8 @@
 // ==UserScript==
 // @name        Redirect YouTube channel to /videos
 // @namespace   https://stojanow.com/
-// @match       https://*.youtube.com/@*
-// @match       http://*.youtube.com/@*
-// @match       https://youtube.com/@*
-// @match       http://youtube.com/@*
+// @match        *://youtube.com/*
+// @match        *://*.youtube.com/*
 // @run-at      document-start
 // @grant       none
 // @version      0.2.0
@@ -22,6 +20,11 @@
     if (isRedirecting) return; // Prevent multiple redirections
 
     const currentPath = window.location.pathname;
+
+    /**
+    * Regex to capture the base path of any valid YouTube channel URL format:
+    * @handle, /c/channel, /user/legacy
+    */
     const channelMatch = currentPath.match(/^\/@([^/]+)/);
 
     if (channelMatch) {
