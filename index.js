@@ -13,27 +13,31 @@
 // ==/UserScript==
 
 (function() {
-  const excludedPaths = ['/community', '/live', '/playlists', '/search', '/podcasts', '/shorts', '/streams'];
+  'use strict';
+
+  const excludedPaths = ['/videos', '/community', '/live', '/playlists', '/search', '/podcasts', '/shorts', '/streams'];
   let isRedirecting = false;
+  let lastCheckedPath = '';
 
   function redirectIfNeeded() {
-    if (isRedirecting) return; // Prevent multiple redirections
-
     const currentPath = window.location.pathname;
+
+    if (isRedirecting || currentPath === lastCheckedPath) return;
+    lastCheckedPath = currentPath;
 
     /**
     * Regex to capture the base path of any valid YouTube channel URL format:
-    * @handle, /c/channel, /user/legacy
+    * @handle, /c/channel, /user/legacy, /channel/
     */
-    const channelMatch = currentPath.match(/^\/@([^/]+)/);
+    const channelMatch = currentPath.match(/^(\/@[\w.-]+|\/(?:channel|c|user)\/[^/]+)/);
 
     if (channelMatch) {
-      const channelName = channelMatch[1];
-      const shouldRedirect = !excludedPaths.some(path => currentPath.startsWith(`/@${channelName}${path}`));
+      const channelBasePath = channelMatch[0];
+      const shouldBeExcluded = excludedPaths.some(suffix => currentPath.startsWith(channelBasePath + suffix));
 
-      if (shouldRedirect && (!currentPath.endsWith('/videos') || currentPath.endsWith('/featured'))) {
+      if (!shouldBeExcluded) {
         isRedirecting = true;
-        const newUrl = `https://www.youtube.com/@${channelName}/videos`;
+        const newUrl = `https://www.youtube.com${channelBasePath}/videos`;
         window.location.href = newUrl;
       }
     }
