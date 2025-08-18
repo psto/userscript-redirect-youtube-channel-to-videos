@@ -5,7 +5,7 @@
 // @match        *://*.youtube.com/*
 // @run-at      document-start
 // @grant       none
-// @version      0.2.1
+// @version      0.3.0
 // @author      Piotr Stojanow (https://github.com/psto/)
 // @license     MIT
 // @description Redirect a YouTube channel home page straight to the videos tab.
